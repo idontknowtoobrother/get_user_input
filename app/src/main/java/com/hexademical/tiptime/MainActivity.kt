@@ -3,6 +3,8 @@ package com.hexademical.tiptime
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.hexademical.tiptime.databinding.ActivityMainBinding
+import java.lang.Math.ceil
+import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -17,6 +19,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun calculateTip() {
         val cost = binding.costOfService.text.toString().toDouble()
+        val selectId = binding.tipOptions.checkedRadioButtonId
+        val tipPercentage = when(selectId){
+            R.id.tip_15_percent -> 0.15
+            R.id.tip_18_percent -> 0.18
+            else -> 0.20
+        }
+
+        val isRoundUp = binding.roundupService.isChecked
+        val tipAmount = when(isRoundUp){
+            true -> ceil(cost * tipPercentage)
+            else -> cost * tipPercentage
+        }
+
+        val formatTip = NumberFormat.getCurrencyInstance().format(tipAmount)
+        binding.tipAmount.text = getString(R.string.tip_amount, formatTip)
+
 
     }
 }
